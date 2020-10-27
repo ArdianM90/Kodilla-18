@@ -4,6 +4,7 @@ import com.crud.tasks.domain.TaskDto;
 import com.crud.tasks.mapper.TaskMapper;
 import com.crud.tasks.service.DbService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,31 +23,31 @@ public class TaskController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getTask") //ALBO TAK
-    public TaskDto getTask(Long taskId) {
-        return taskMapper.mapToTaskDto(service.findById((long)2).orElse(null));
+    public TaskDto getTask(@RequestParam Long taskId) throws TaskNotFoundException {
+        return taskMapper.mapToTaskDto(service.findById(taskId).orElseThrow(TaskNotFoundException::new));
     }
 
     @DeleteMapping("deleteTask")
 //    @RequestMapping(method = RequestMethod.DELETE, value = "deleteTask")
-    public void deleteTask(Long taskId) {
-
+    public void deleteTask(@RequestParam Long taskId) {
+        service.deleteTask(taskId);
     }
 
     @PostMapping("updateTask")
 //    @RequestMapping(method = RequestMethod.POST, value = "updateTask")
-    public TaskDto updateTask(TaskDto task) {
+    public TaskDto updateTask(@RequestBody TaskDto task) {
         return new TaskDto(1L, "edited test title", "test content");
     }
 
-    @PostMapping("createTask")
-//    @RequestMapping(method = RequestMethod.POST, value = "createTask")
-    public void createTask(TaskDto task) {
-
+    @PostMapping(value = "createTask", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    @RequestMapping(method = RequestMethod.POST, value = "createTask", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void createTask(@RequestBody TaskDto taskDto) {
+        service.saveTask(taskMapper.mapToTask(taskDto));
     }
 
-    @GetMapping("createTask")
-//    @RequestMapping(method = RequestMethod.GET, value = "createTask")
-    public void getBoard(TaskDto task) {
-
-    }
+//    @GetMapping("getBoard")
+////    @RequestMapping(method = RequestMethod.GET, value = "getBoard")
+//    public void getBoard(TaskDto task) {
+//
+//    }
 }
