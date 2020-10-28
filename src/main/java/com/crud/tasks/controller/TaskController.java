@@ -1,5 +1,6 @@
 package com.crud.tasks.controller;
 
+import com.crud.tasks.domain.Task;
 import com.crud.tasks.domain.TaskDto;
 import com.crud.tasks.mapper.TaskMapper;
 import com.crud.tasks.service.DbService;
@@ -30,19 +31,21 @@ public class TaskController {
     @DeleteMapping("deleteTask")
 //    @RequestMapping(method = RequestMethod.DELETE, value = "deleteTask")
     public void deleteTask(@RequestParam Long taskId) {
-        service.deleteTask(taskId);
-    }
-
-    @PostMapping("updateTask")
-//    @RequestMapping(method = RequestMethod.POST, value = "updateTask")
-    public TaskDto updateTask(@RequestBody TaskDto task) {
-        return new TaskDto(1L, "edited test title", "test content");
+        service.deleteTaskById(taskId);
     }
 
     @PostMapping(value = "createTask", consumes = MediaType.APPLICATION_JSON_VALUE)
 //    @RequestMapping(method = RequestMethod.POST, value = "createTask", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createTask(@RequestBody TaskDto taskDto) {
         service.saveTask(taskMapper.mapToTask(taskDto));
+    }
+
+    @PostMapping(value = "updateTask", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void updateTask(@RequestBody TaskDto taskDto) throws TaskNotFoundException {
+        Task editedTask = service.findById(taskDto.getId()).orElseThrow(TaskNotFoundException::new);
+        editedTask.setTitle(taskDto.getTitle());
+        editedTask.setContent(taskDto.getContent());
+        service.saveTask(editedTask);
     }
 
 //    @GetMapping("getBoard")
