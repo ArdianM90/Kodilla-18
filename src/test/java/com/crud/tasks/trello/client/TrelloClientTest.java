@@ -46,7 +46,6 @@ public class TrelloClientTest extends TestCase {
         TrelloBoardDto[] trelloBoards = new TrelloBoardDto[1];
         trelloBoards[0] = new TrelloBoardDto("test_id", "test_board", new ArrayList<>());
         URI uri = new URI("http://test.com/members/test_user/boards?key=test&token=test&fields=name,id&lists=all");
-
         when(restTemplate.getForObject(uri, TrelloBoardDto[].class)).thenReturn(trelloBoards);
 
         //When
@@ -60,6 +59,19 @@ public class TrelloClientTest extends TestCase {
     }
 
     @Test
+    public void shouldReturnEmptyList() throws URISyntaxException {
+        //Given
+        URI uri = new URI("http://test.com/corrupted_url");
+        when(restTemplate.getForObject(uri, TrelloBoardDto[].class)).thenReturn(null);
+
+        //When
+        List<TrelloBoardDto> fetchedTrelloBoards = trelloClient.getTrelloBoards();
+
+        //Then
+        assertEquals(0, fetchedTrelloBoards.size());
+    }
+
+    @Test
     public void shouldCreateCard() throws URISyntaxException {
         //Given
         TrelloCardDto trelloCardDto = new TrelloCardDto(
@@ -68,7 +80,6 @@ public class TrelloClientTest extends TestCase {
                 "top",
                 "test_id"
         );
-
         URI uri = new URI("http://test.com/cards?key=test&token=test&name=Test%20task&desc=Test%20description&pos=top&idList=test_id");
 
         CreatedTrelloCard createdTrelloCard = new CreatedTrelloCard(
