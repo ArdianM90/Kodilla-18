@@ -11,6 +11,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class TrelloClient {
@@ -33,10 +34,7 @@ public class TrelloClient {
 //        TrelloBoardDto[] boardsResponse = restTemplate.getForObject(trelloApiEndpoint+"/members/adrianmienkowski/boards"+"?key="+trelloAppKey+"&token="+trelloToken, TrelloBoardDto[].class);
         TrelloBoardDto[] boardsResponse = restTemplate.getForObject(urlBuilder(), TrelloBoardDto[].class);
 
-        if(boardsResponse != null) {
-            return Arrays.asList(boardsResponse);
-        }
-        return new ArrayList<>();
+        return Optional.ofNullable(boardsResponse).map(Arrays::asList).orElseGet(ArrayList::new);
     }
 
     private URI urlBuilder() {
