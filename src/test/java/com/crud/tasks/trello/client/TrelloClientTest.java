@@ -61,7 +61,7 @@ public class TrelloClientTest extends TestCase {
     @Test
     public void shouldReturnEmptyList() throws URISyntaxException {
         //Given
-        URI uri = new URI("http://test.com/corrupted_url");
+        URI uri = new URI("http://test.com/members/test_user/boards?key=test&token=test&fields=name,id&lists=all");
         when(restTemplate.getForObject(uri, TrelloBoardDto[].class)).thenReturn(null);
 
         //When
