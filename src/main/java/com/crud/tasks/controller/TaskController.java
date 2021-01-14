@@ -16,17 +16,18 @@ import java.util.List;
 public class TaskController {
     @Autowired
     private DbService service;
+
     @Autowired
     private TaskMapper taskMapper;
-
-    @GetMapping("getTasks") //TAK
-    public List<TaskDto> getTasks() {
-        return taskMapper.mapToTaskDtoList(service.getAllTasks());
-    }
 
     @RequestMapping(method = RequestMethod.GET, value = "getTask") //ALBO TAK
     public TaskDto getTask(@RequestParam Long taskId) throws TaskNotFoundException {
         return taskMapper.mapToTaskDto(service.findById(taskId).orElseThrow(TaskNotFoundException::new));
+    }
+
+    @GetMapping("getTasks") //TAK
+    public List<TaskDto> getTasks() {
+        return taskMapper.mapToTaskDtoList(service.getAllTasks());
     }
 
     @DeleteMapping("deleteTask")
