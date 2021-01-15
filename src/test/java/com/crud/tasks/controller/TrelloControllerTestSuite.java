@@ -72,7 +72,72 @@ public class TrelloControllerTestSuite extends TestCase {
     }
 
     @Test
-    public void shouldCreateTrelloCard() throws Exception {
+    public void shouldCreateTrelloCardWithAllSubclasses() throws Exception {
+        //Given
+        Gson gson = new Gson();
+        TrelloCardDto trelloCardDto = new TrelloCardDto(
+                "Test",
+                "Test description",
+                "top",
+                "1"
+        );
+        AttachementsByTypeDto attachementsByTypeDto = new AttachementsByTypeDto(new TrelloDto(1,1));
+        BadgesDto badgesDto = new BadgesDto(4, attachementsByTypeDto);
+        CreatedTrelloCardDto createdTrelloCardDto = new CreatedTrelloCardDto(
+                "323",
+                "Test",
+                "http://test.com",
+                badgesDto
+        );
+        when(trelloFacade.createCard(ArgumentMatchers.any(TrelloCardDto.class))).thenReturn(createdTrelloCardDto);
+        String jsonContent = gson.toJson(trelloCardDto);
+
+        //When&Then
+        mockMvc.perform(post("/v1/trello/createTrelloCard")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(jsonContent))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is("323")))
+                .andExpect(jsonPath("$.name", is("Test")))
+                .andExpect(jsonPath("$.shortUrl", is("http://test.com")));
+    }
+
+    @Test
+    public void shouldCreateTrelloCardWithEmptyTrelloDto() throws Exception {
+        //Given
+        Gson gson = new Gson();
+        TrelloCardDto trelloCardDto = new TrelloCardDto(
+                "Test",
+                "Test description",
+                "top",
+                "1"
+        );
+        AttachementsByTypeDto attachementsByTypeDto = new AttachementsByTypeDto(new TrelloDto());
+        BadgesDto badgesDto = new BadgesDto(4, attachementsByTypeDto);
+        CreatedTrelloCardDto createdTrelloCardDto = new CreatedTrelloCardDto(
+                "323",
+                "Test",
+                "http://test.com",
+                badgesDto
+        );
+        when(trelloFacade.createCard(ArgumentMatchers.any(TrelloCardDto.class))).thenReturn(createdTrelloCardDto);
+        String jsonContent = gson.toJson(trelloCardDto);
+
+        //When&Then
+        System.out.println(jsonContent);
+        mockMvc.perform(post("/v1/trello/createTrelloCard")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(jsonContent))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is("323")))
+                .andExpect(jsonPath("$.name", is("Test")))
+                .andExpect(jsonPath("$.shortUrl", is("http://test.com")));
+    }
+
+    @Test
+    public void shouldCreateTrelloCardWithEmptyAttachementsByTypeDto() throws Exception {
         //Given
         Gson gson = new Gson();
         TrelloCardDto trelloCardDto = new TrelloCardDto(
@@ -93,6 +158,39 @@ public class TrelloControllerTestSuite extends TestCase {
         String jsonContent = gson.toJson(trelloCardDto);
 
         //When&Then
+        System.out.println(jsonContent);
+        mockMvc.perform(post("/v1/trello/createTrelloCard")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(jsonContent))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is("323")))
+                .andExpect(jsonPath("$.name", is("Test")))
+                .andExpect(jsonPath("$.shortUrl", is("http://test.com")));
+    }
+
+    @Test
+    public void shouldCreateTrelloCardWithEmptyBadgesDto() throws Exception {
+        //Given
+        Gson gson = new Gson();
+        TrelloCardDto trelloCardDto = new TrelloCardDto(
+                "Test",
+                "Test description",
+                "top",
+                "1"
+        );
+        BadgesDto badgesDto = new BadgesDto();
+        CreatedTrelloCardDto createdTrelloCardDto = new CreatedTrelloCardDto(
+                "323",
+                "Test",
+                "http://test.com",
+                badgesDto
+        );
+        when(trelloFacade.createCard(ArgumentMatchers.any(TrelloCardDto.class))).thenReturn(createdTrelloCardDto);
+        String jsonContent = gson.toJson(trelloCardDto);
+
+        //When&Then
+        System.out.println(jsonContent);
         mockMvc.perform(post("/v1/trello/createTrelloCard")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
