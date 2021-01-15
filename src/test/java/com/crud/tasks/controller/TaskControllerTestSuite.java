@@ -120,7 +120,22 @@ public class TaskControllerTestSuite extends TestCase {
     @Test
     public void shouldUpdateTask() throws Exception {
         //Given
+        Gson gson = new Gson();
+        Task editedTask = new Task(1L, "test_title1", "test_content1");
+        Task newTask = new Task(1L, "edited_title1", "edited_content1");
+        Optional<Task> optTask = Optional.of(editedTask);
+        String jsonContent = gson.toJson(newTask);
+        when(dbService.findById(anyLong())).thenReturn(optTask);
 
         //When&Then
+        System.out.println(jsonContent);
+        mockMvc.perform(post("/v1/task/updateTask")
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(jsonContent))
+                .andExpect(status().isOk());
+//                .andExpect(jsonPath("$.title", is("edited_title1")))
+//                .andExpect(jsonPath("$.content", is("edited_content1")));
+        verify(dbService, times(1)).saveTask(editedTask);
     }
 }
