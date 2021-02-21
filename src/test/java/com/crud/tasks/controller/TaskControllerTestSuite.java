@@ -128,14 +128,12 @@ public class TaskControllerTestSuite extends TestCase {
         when(dbService.findById(anyLong())).thenReturn(optTask);
 
         //When&Then
+        System.out.println("====JSON====");
         System.out.println(jsonContent);
-        mockMvc.perform(post("/v1/task/updateTask")
-                .contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/v1/task/updateTask").contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
                 .andExpect(status().isOk());
-//                .andExpect(jsonPath("$.title", is("edited_title1")))
-//                .andExpect(jsonPath("$.content", is("edited_content1")));
         verify(dbService, times(1)).saveTask(editedTask);
     }
 }
