@@ -30,6 +30,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-mail:2.4.1')
 	compile('com.google.code.gson:gson:2.8.2')
 	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 }
 
 //war {
