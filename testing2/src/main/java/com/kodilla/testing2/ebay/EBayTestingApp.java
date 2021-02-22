@@ -9,7 +9,7 @@ public class EBayTestingApp {
     public static final String SEARCHFIELD = "gh-ac";
 
     public static void main(String[] args) {
-        WebDriver driver = WebDriverConfig.getDriver(WebDriverConfig.CHROME);
+        WebDriver driver = WebDriverConfig.getDriver(WebDriverConfig.FIREFOX);
         driver.get("https://www.ebay.com");
 
         waitXSeconds(2);
