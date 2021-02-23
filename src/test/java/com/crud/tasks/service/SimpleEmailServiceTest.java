@@ -1,5 +1,6 @@
 package com.crud.tasks.service;
 
+import com.crud.tasks.config.AdminConfig;
 import com.crud.tasks.domain.Mail;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -9,9 +10,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleEmailServiceTest extends TestCase {
@@ -24,7 +27,8 @@ public class SimpleEmailServiceTest extends TestCase {
     @Test
     public void shouldSendEmail() {
         //Given
-        Mail mail = new Mail("test@test.com", null, "Test", "Test message.");
+        AdminConfig adminConfig = new AdminConfig();
+        Mail mail = new Mail(adminConfig.getAdminMail(), "kodilla.course.2020@gmail.com", "Test", "Test message.");
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(mail.getMailTo());
         mailMessage.setSubject(mail.getSubject());
@@ -34,6 +38,6 @@ public class SimpleEmailServiceTest extends TestCase {
         simpleEmailService.send(mail);
 
         //Then
-        verify(javaMailSender, times(1)).send(mailMessage);
+        verify(javaMailSender, times(1)).send((MimeMessagePreparator) any());
     }
 }
