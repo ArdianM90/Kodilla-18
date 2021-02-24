@@ -23,29 +23,30 @@ public class SimpleEmailService {
     public void send(final Mail mail) {
         LOGGER.info("Starting email preparation...");
         try {
-//            SimpleMailMessage mailMessage = createMailMessage(mail);
-//            javaMailSender.send(mailMessage);
-            javaMailSender.send(createMimeMessage(mail));
+            MimeMessagePreparator mailMessage = createMimeMessage(mail);
+            javaMailSender.send(mailMessage);
             LOGGER.info("Email has been sent.");
         } catch(MailException e) {
             LOGGER.error("Failed to process email sending: "+e.getMessage(), e);
         }
     }
 
-//    private SimpleMailMessage createMailMessage(final Mail mail) {
-//        SimpleMailMessage mailMessage = new SimpleMailMessage();
-//        mailMessage.setTo(mail.getMailTo());
-//        if(mail.getMailToCc() != null)
-//            mailMessage.setCc(mail.getMailToCc());
-//        mailMessage.setSubject(mail.getSubject());
-//        mailMessage.setText(mail.getMessage());
-//        return mailMessage;
-//    }
+    private SimpleMailMessage createMailMessage(final Mail mail) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(mail.getMailTo());
+        if(mail.getMailToCc() != null)
+            mailMessage.setCc(mail.getMailToCc());
+        mailMessage.setSubject(mail.getSubject());
+        mailMessage.setText(mail.getMessage());
+        return mailMessage;
+    }
 
     private MimeMessagePreparator createMimeMessage(final Mail mail) {
+        System.out.println("SENDING MAIL: "+mail);
         return mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setTo(mail.getMailTo());
+            messageHelper.setCc(mail.getMailToCc());
             messageHelper.setSubject(mail.getSubject());
             messageHelper.setText(mailCreatorService.buildTrelloCardEmail(mail.getMessage()), true);
         };
