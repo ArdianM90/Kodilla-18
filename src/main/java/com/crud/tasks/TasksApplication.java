@@ -1,5 +1,6 @@
 package com.crud.tasks;
 
+import com.crud.tasks.config.AdminConfig;
 import com.crud.tasks.domain.Mail;
 import com.crud.tasks.service.SimpleEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
+import java.util.Date;
+
 @SpringBootApplication
 public class TasksApplication extends SpringBootServletInitializer implements CommandLineRunner {
 	@Autowired
 	SimpleEmailService emailService;
+	@Autowired
+	AdminConfig adminConfig;
 
 	public static void main(String[] args) {
 		SpringApplication.run(TasksApplication.class, args);
@@ -25,11 +30,13 @@ public class TasksApplication extends SpringBootServletInitializer implements Co
 
 	@Override
 	public void run(String... args) throws Exception {
-		Mail mail = new Mail(
-				"amienkowski@gmail.com",
+		int quantity = 14;
+		emailService.send(new Mail(
 				"kodilla.course.2020@gmail.com",
-				"TESTS",
-				"New card: has been created on your Trello account.");
-		emailService.send(mail);
+				null,
+				new Date(),
+				"Daily information about tasks quantity",
+				"Currently you have "+quantity+" tasks."
+		));
 	}
 }

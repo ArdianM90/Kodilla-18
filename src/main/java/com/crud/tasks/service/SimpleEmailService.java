@@ -42,13 +42,14 @@ public class SimpleEmailService {
     }
 
     private MimeMessagePreparator createMimeMessage(final Mail mail) {
-        System.out.println("SENDING MAIL: "+mail);
         return mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setTo(mail.getMailTo());
-            messageHelper.setCc(mail.getMailToCc());
+            if (mail.getMailToCc() != null)
+                messageHelper.setCc(mail.getMailToCc());
             messageHelper.setSubject(mail.getSubject());
-            messageHelper.setText(mailCreatorService.buildTrelloCardEmail(mail.getMessage()), true);
+//            messageHelper.setText(mailCreatorService.buildTrelloCardEmail(mail.getMessage()), true);
+            messageHelper.setText(mailCreatorService.buildTasksQuantityInfoEmail(14), true);
         };
     }
 }
