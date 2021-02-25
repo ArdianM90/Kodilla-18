@@ -50,7 +50,7 @@ public class TaskControllerTestSuite extends TestCase {
         when(dbService.findById(anyLong())).thenReturn(optTask);
 
         //When&Then
-        mockMvc.perform(get("/v1/task/getTask?taskId=1").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/tasks/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.title", is("test_title1")))
@@ -70,7 +70,7 @@ public class TaskControllerTestSuite extends TestCase {
         when(taskMapper.mapToTaskDtoList(any())).thenReturn(taskDtoList);
 
         //When&Then
-        mockMvc.perform(get("/v1/task/getTasks").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/tasks").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id", is(1)))
@@ -84,7 +84,7 @@ public class TaskControllerTestSuite extends TestCase {
         when(dbService.getAllTasks()).thenReturn(new ArrayList<>());
 
         //When&Then
-        mockMvc.perform(get("/v1/task/getTasks").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/tasks").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
     }
@@ -94,7 +94,7 @@ public class TaskControllerTestSuite extends TestCase {
         //Given
 
         //When&Then
-        mockMvc.perform(delete("/v1/task/deleteTask?taskId=1").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(delete("/v1/tasks/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         verify(dbService, times(1)).deleteTaskById(1L);
     }
@@ -109,7 +109,7 @@ public class TaskControllerTestSuite extends TestCase {
         when(taskMapper.mapToTask(any(TaskDto.class))).thenReturn(task);
 
         //When&Then
-        mockMvc.perform(post("/v1/task/createTask")
+        mockMvc.perform(post("/v1/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
@@ -121,19 +121,17 @@ public class TaskControllerTestSuite extends TestCase {
     public void shouldUpdateTask() throws Exception {
         //Given
         Gson gson = new Gson();
-        Task editedTask = new Task(1L, "test_title1", "test_content1");
+        TaskDto newTaskDto = new TaskDto(1L, "edited_title1", "edited_content1");
         Task newTask = new Task(1L, "edited_title1", "edited_content1");
-        Optional<Task> optTask = Optional.of(editedTask);
-        String jsonContent = gson.toJson(newTask);
-        when(dbService.findById(anyLong())).thenReturn(optTask);
+        String jsonContent = gson.toJson(newTaskDto);
+        when(taskMapper.mapToTask(any(TaskDto.class))).thenReturn(newTask);
+
 
         //When&Then
-        System.out.println("====JSON====");
-        System.out.println(jsonContent);
-        mockMvc.perform(post("/v1/task/updateTask").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/v1/tasks").contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
                 .andExpect(status().isOk());
-        verify(dbService, times(1)).saveTask(editedTask);
+        verify(dbService, times(1)).saveTask(any(Task.class));
     }
 }

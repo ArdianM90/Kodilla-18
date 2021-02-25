@@ -48,8 +48,8 @@ public class SimpleEmailService {
             if (mail.getMailToCc() != null)
                 messageHelper.setCc(mail.getMailToCc());
             messageHelper.setSubject(mail.getSubject());
-//            messageHelper.setText(mailCreatorService.buildTrelloCardEmail(mail.getMessage()), true);
-            messageHelper.setText(mailCreatorService.buildTasksQuantityInfoEmail(14), true);
+            messageHelper.setText(mailCreatorService.buildTrelloCardEmail(mail.getMessage()), true);
+//            messageHelper.setText(mailCreatorService.buildTasksQuantityInfoEmail(14), true);
         };
     }
 }

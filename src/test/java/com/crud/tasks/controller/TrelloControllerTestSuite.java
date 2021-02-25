@@ -41,7 +41,7 @@ public class TrelloControllerTestSuite extends TestCase {
         when(trelloFacade.fetchTrelloBoards()).thenReturn(trelloBoards);
 
         //When&Then
-        mockMvc.perform(get("/v1/trello/getTrelloBoards").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/trello/boards").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$", hasSize(0)));
     }
@@ -58,7 +58,7 @@ public class TrelloControllerTestSuite extends TestCase {
         when(trelloFacade.fetchTrelloBoards()).thenReturn(trelloBoards);
 
         //When&Then
-        mockMvc.perform(get("/v1/trello/getTrelloBoards").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/trello/boards").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 //TrelloBoard fields
                 .andExpect(jsonPath("$", hasSize(1)))
@@ -93,7 +93,7 @@ public class TrelloControllerTestSuite extends TestCase {
         String jsonContent = gson.toJson(trelloCardDto);
 
         //When&Then
-        mockMvc.perform(post("/v1/trello/createTrelloCard")
+        mockMvc.perform(post("/v1/trello/cards")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
@@ -126,7 +126,7 @@ public class TrelloControllerTestSuite extends TestCase {
 
         //When&Then
         System.out.println(jsonContent);
-        mockMvc.perform(post("/v1/trello/createTrelloCard")
+        mockMvc.perform(post("/v1/trello/cards")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
@@ -159,7 +159,7 @@ public class TrelloControllerTestSuite extends TestCase {
 
         //When&Then
         System.out.println(jsonContent);
-        mockMvc.perform(post("/v1/trello/createTrelloCard")
+        mockMvc.perform(post("/v1/trello/cards")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))
@@ -191,7 +191,7 @@ public class TrelloControllerTestSuite extends TestCase {
 
         //When&Then
         System.out.println(jsonContent);
-        mockMvc.perform(post("/v1/trello/createTrelloCard")
+        mockMvc.perform(post("/v1/trello/cards")
                 .contentType(MediaType.APPLICATION_JSON)
                 .characterEncoding("UTF-8")
                 .content(jsonContent))

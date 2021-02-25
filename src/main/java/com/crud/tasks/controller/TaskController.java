@@ -1,6 +1,5 @@
 package com.crud.tasks.controller;
 
-import com.crud.tasks.domain.Task;
 import com.crud.tasks.domain.TaskDto;
 import com.crud.tasks.mapper.TaskMapper;
 import com.crud.tasks.service.DbService;
@@ -12,7 +11,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/v1/task")
+@RequestMapping("/v1")
 public class TaskController {
     @Autowired
     private DbService service;
@@ -20,39 +19,28 @@ public class TaskController {
     @Autowired
     private TaskMapper taskMapper;
 
-    @RequestMapping(method = RequestMethod.GET, value = "getTask") //ALBO TAK
-    public TaskDto getTask(@RequestParam Long taskId) throws TaskNotFoundException {
+    @RequestMapping(method = RequestMethod.GET, value = "/tasks/{taskId}")
+    public TaskDto getTask(@PathVariable Long taskId) throws TaskNotFoundException {
         return taskMapper.mapToTaskDto(service.findById(taskId).orElseThrow(TaskNotFoundException::new));
     }
 
-    @GetMapping("getTasks") //TAK
+    @GetMapping("/tasks")
     public List<TaskDto> getTasks() {
         return taskMapper.mapToTaskDtoList(service.getAllTasks());
     }
 
-    @DeleteMapping("deleteTask")
-//    @RequestMapping(method = RequestMethod.DELETE, value = "deleteTask")
-    public void deleteTask(@RequestParam Long taskId) {
+    @DeleteMapping("/tasks/{taskId}")
+    public void deleteTask(@PathVariable Long taskId) {
         service.deleteTaskById(taskId);
     }
 
-    @PostMapping(value = "createTask", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    @RequestMapping(method = RequestMethod.POST, value = "createTask", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/tasks", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createTask(@RequestBody TaskDto taskDto) {
         service.saveTask(taskMapper.mapToTask(taskDto));
     }
 
-    @PostMapping(value = "updateTask", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void updateTask(@RequestBody TaskDto taskDto) throws TaskNotFoundException {
-        Task editedTask = service.findById(taskDto.getId()).orElseThrow(TaskNotFoundException::new);
-        editedTask.setTitle(taskDto.getTitle());
-        editedTask.setContent(taskDto.getContent());
-        service.saveTask(editedTask);
+    @PutMapping(value = "/tasks")
+    public TaskDto updateTask(@RequestBody TaskDto taskDto) {
+        return taskMapper.mapToTaskDto(service.saveTask(taskMapper.mapToTask(taskDto)));
     }
-
-//    @GetMapping("getBoard")
-////    @RequestMapping(method = RequestMethod.GET, value = "getBoard")
-//    public void getBoard(TaskDto task) {
-//
-//    }
 }
